@@ -1,0 +1,446 @@
+COMPLETO
+
+---CREATE TABLE
+CREATE TABLE fornecedor (
+    cod_fornecedor VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(14) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    CONSTRAINT pk_fornecedor PRIMARY KEY (cod_fornecedor)
+);
+
+CREATE TABLE loja (
+cod_loja VARCHAR NOT NULL,
+nome VARCHAR NOT NULL,
+telefone VARCHAR NOT NULL,
+endereco VARCHAR NOT NULL,
+CONSTRAINT pk_loja PRIMARY KEY (cod_loja)
+);
+
+CREATE TABLE relatorio (
+    cod_relatorio VARCHAR(255) NOT NULL,
+    cod_loja VARCHAR(255) NOT NULL,
+    vlr_total DOUBLE,
+    data_inicio DATETIME,
+    data_fim DATETIME,
+    CONSTRAINT pk_relatorio PRIMARY KEY (cod_relatorio),
+    CONSTRAINT fk_loja FOREIGN KEY (cod_loja) REFERENCES loja(cod_loja)
+);
+
+CREATE TABLE estoque (
+cod_estoque VARCHAR NOT NULL,
+cod_produto VARCHAR NOT NULL,
+cod_loja VARCHAR NOT NULL,
+qtd_produto INT,
+CONSTRAINT pk_estoque PRIMARY KEY (cod_estoque),
+CONSTRAINT fk_produto FOREIGN KEY (cod_produto)REFERENCES produto(cod_produto),
+CONSTRAINT fk_loja FOREIGN KEY (cod_loja) REFERENCES loja (cod_loja)
+);
+
+CREATE TABLE vendedor (
+    cod_vendedor VARCHAR(255) NOT NULL,
+    cod_usuario VARCHAR(255) NOT NULL,
+    cod_loja VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    admin BOOLEAN,
+    CONSTRAINT pk_vendedor PRIMARY KEY (cod_vendedor),
+    CONSTRAINT fk_usuario FOREIGN KEY (cod_usuario) REFERENCES usuario(cod_usuario),
+    CONSTRAINT fk_loja FOREIGN KEY (cod_loja) REFERENCES loja(cod_loja)
+);
+
+CREATE TABLE produto (
+    cod_produto VARCHAR(255) NOT NULL,
+    cod_fornecedor VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    vlr_produto DOUBLE,
+    CONSTRAINT pk_produto PRIMARY KEY (cod_produto),
+    CONSTRAINT fk_fornecedor FOREIGN KEY (cod_fornecedor) REFERENCES fornecedor(cod_fornecedor)
+);
+
+CREATE TABLE itens_pedido (
+    cod_itens_pedido VARCHAR(255) NOT NULL,
+    cod_pedido VARCHAR(255) NOT NULL,
+    cod_produto VARCHAR(255) NOT NULL,
+    qtd_produto INT,
+    CONSTRAINT pk_itens_pedido PRIMARY KEY (cod_itens_pedido),
+    CONSTRAINT fk_pedido FOREIGN KEY (cod_pedido) REFERENCES pedido(cod_pedido),
+    CONSTRAINT fk_produto FOREIGN KEY (cod_produto) REFERENCES produto(cod_produto)
+);
+
+CREATE TABLE usuario (
+    cod_usuario VARCHAR(255) NOT NULL,
+    login VARCHAR(255) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_usuario PRIMARY KEY (cod_usuario)
+);
+
+CREATE TABLE cliente (
+    cod_cliente VARCHAR(255) NOT NULL,
+    cod_usuario VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    CONSTRAINT pk_cliente PRIMARY KEY (cod_cliente),
+    CONSTRAINT fk_usuario FOREIGN KEY (cod_usuario) REFERENCES usuario(cod_usuario)
+);
+
+
+CREATE TABLE pedido (
+    cod_pedido VARCHAR(255) NOT NULL,
+    cod_cliente VARCHAR(255) NOT NULL,
+    cod_vendedor VARCHAR(255) NOT NULL,
+    cod_loja VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    tempo_espera TIME,
+    valor_pedido DOUBLE,
+    data DATETIME,
+    CONSTRAINT pk_pedido PRIMARY KEY (cod_pedido),
+    CONSTRAINT fk_cliente FOREIGN KEY (cod_cliente) REFERENCES cliente(cod_cliente),
+    CONSTRAINT fk_vendedor FOREIGN KEY (cod_vendedor) REFERENCES vendedor(cod_vendedor),
+    CONSTRAINT fk_loja FOREIGN KEY (cod_loja) REFERENCES loja(cod_loja)
+    );
+    
+   ----INSERT
+   INSERT INTO cliente (cod_cliente, nome, telefone, endereco, cod_usuario, cpf)
+VALUES ('1', 'marcos', '31985624390', 'R. DURTRA 7861', 1, '12290618836');
+
+INSERT INTO cliente (cod_cliente, nome, telefone, endereco, cod_usuario, cpf)
+VALUES ('2', 'TULIO', '3189657842', 'R. FERRAZ 599', 2, '12365478925');
+
+INSERT INTO cliente (cod_cliente, nome, telefone, endereco, cod_usuario, cpf)
+VALUES ('3', 'DILMA', '31974528690', 'R. DILA 8961', 3, '78965485314');
+
+INSERT INTO cliente (cod_cliente, nome, telefone, endereco, cod_usuario, cpf)
+VALUES ('4', 'LORENA', '31994587698', 'R. BRAZ 7891', 4, '65897485624');
+
+INSERT INTO vendedor (cod_vendedor, nome, cpf, telefone, endereco, admin, cod_usuario, cod_loja)
+VALUES (1, 'JULIA', '11144455566', '31985748625', 'R. RS 16', 1, 1, 1);
+
+INSERT INTO vendedor (cod_vendedor, nome, cpf, telefone, endereco, admin, cod_usuario, cod_loja)
+VALUES (2, 'MARIA', '31589632166', '31978965625', 'R. J 569', 1, 2, 2);
+
+
+INSERT INTO vendedor (cod_vendedor, nome, cpf, telefone, endereco, admin, cod_usuario, cod_loja)
+VALUES (3, 'BEATRIZ', '99985714537', '31985663214', 'R. BH 987 985', 0, 3, 3);
+
+INSERT INTO vendedor (cod_vendedor, nome, cpf, telefone, endereco, admin, cod_usuario, cod_loja)
+VALUES (4, 'CLARA', '11144466682', '31985982657', 'R. SP 986', 0, 4, 4);
+
+
+INSERT INTO fornecedor (cod_fornecedor, nome, endereco, email, cnpj, telefone)
+VALUES (1, 'MARCIA', 'R. UM', 'MARCIA@HOTMAIL.COM', '9874665000189', '31985267489');
+
+INSERT INTO fornecedor (cod_fornecedor, nome, endereco, email, cnpj, telefone)
+VALUES (2, 'FRAN', 'R. DOIS', 'FRAN@HOTMAIL.COM', '9874789000189', '31985269856');
+
+INSERT INTO fornecedor (cod_fornecedor, nome, endereco, email, cnpj, telefone)
+VALUES (3, 'YASMIN', 'R TRES', 'YASMIN@HOTMAIL.COM', '9874678650189', '31789657489');
+
+INSERT INTO fornecedor (cod_fornecedor, nome, endereco, email, cnpj, telefone)
+VALUES (4, 'MONICA', 'R. QUATRO', 'MONICA@HOTMAIL.COM', '9874789000189', '31985799689');
+
+INSERT INTO loja (cod_loja, nome, telefone, endereco)
+VALUES (1, 'BUBH', '02186458642', 'R. PEDRA 889');
+
+INSERT INTO loja (cod_loja, nome, telefone, endereco)
+VALUES (2, 'RJBH', '02187758642', 'R. BRITA 789');
+
+INSERT INTO loja (cod_loja, nome, telefone, endereco)
+VALUES (3, 'MGBH', '01187758642', 'R. ALIZ 89');
+
+INSERT INTO loja (cod_loja, nome, telefone, endereco)
+VALUES (4, 'SPBH', '06978958642', 'R. SURF 7878');`
+
+INSERT INTO relatorio (cod_relatorio, vlr_total, data_inicio, data_fim, cod_loja)
+VALUES (1, 133.45, '2023-11-18', '2023-11-19', 1);
+
+INSERT INTO relatorio (cod_relatorio, vlr_total, data_inicio, data_fim, cod_loja)
+VALUES (2, 253.45, '2023-11-14', '2023-11-15', 2);
+
+INSERT INTO relatorio (cod_relatorio, vlr_total, data_inicio, data_fim, cod_loja)
+VALUES (3, 2899.00, '2023-11-17', '2023-11-18', 3);
+
+INSERT INTO relatorio (cod_relatorio, vlr_total, data_inicio, data_fim, cod_loja)
+VALUES (4, 2589.00, '2023-11-17', '2023-11-18', 4);
+
+INSERT INTO estoque (cod_estoque, qtd_produto, cod_produto, cod_loja)
+VALUES (1, 96, 1, 1);
+ 
+INSERT INTO estoque (cod_estoque, qtd_produto, cod_produto, cod_loja)
+VALUES (2, 85, 2, 2);
+
+INSERT INTO estoque (cod_estoque, qtd_produto, cod_produto, cod_loja)
+VALUES (3, 96, 3, 3);
+
+INSERT INTO estoque (cod_estoque, qtd_produto,cod_produto, cod_loja)
+VALUES (4, 76, 4, 4);
+
+INSERT INTO produto (cod_produto, nome, vlr_produto, cod_fornecedor)
+VALUES (1, 'whisky', 129.90, 1);
+
+INSERT INTO produto (cod_produto, nome, vlr_produto, cod_fornecedor)
+VALUES (2, 'vodka', 109.90, 2);
+
+INSERT INTO produto (cod_produto, nome, vlr_produto, cod_fornecedor)
+VALUES (3, 'gin', 229.90, 3);
+
+INSERT INTO produto (cod_produto, nome, vlr_produto, cod_fornecedor)
+VALUES (4, 'licor', 369.90, 4);
+
+INSERT INTO usuario (cod_usuario, login, senha, email)
+VALUES (1, 'usu12', 684493, 'usu12@hotmail');
+
+INSERT INTO usuario (cod_usuario, login, senha, email)
+VALUES (2, 'usu13', 122493, 'usu13@hotmail');
+
+INSERT INTO usuario (cod_usuario, login, senha, email)
+VALUES (3, 'usu13', 689653, 'usu13@hotmail');
+
+INSERT INTO usuario (cod_usuario, login, senha, email)
+VALUES (4, 'usu14', 696493, 'usu14@hotmail');
+
+INSERT INTO pedido (cod_pedido, status, tempo_espera, valor_pedido, cod_cliente, cod_loja, cod_vendedor)
+VALUES (1, 'preparando', '05:00', 87.50, 1, 1, 1);
+
+INSERT INTO pedido (cod_pedido, status, tempo_espera, valor_pedido, cod_cliente, cod_loja, cod_vendedor)
+VALUES (2, 'entregue', '09:40', 98.50, 2, 2, 2);
+
+INSERT INTO pedido (cod_pedido, status, tempo_espera, valor_pedido, cod_cliente, cod_loja, cod_vendedor)
+VALUES (3, 'entregue', '09:40', 35.60, 3, 3, 3);
+
+INSERT INTO pedido (cod_pedido, status, tempo_espera, valor_pedido, cod_cliente, cod_loja, cod_vendedor)
+VALUES (4, 'cancelado', '09:6', 73.90, 4, 4, 4);
+
+INSERT INTO itens_pedido (cod_itens_pedido, qtd_produto, cod_pedido, cod_produto)
+VALUES (1, 45, 1, 1);
+
+INSERT INTO itens_pedido (cod_itens_pedido, qtd_produto, cod_pedido, cod_produto)
+VALUES (2, 78, 2, 2);
+
+INSERT INTO itens_pedido (cod_itens_pedido, qtd_produto, cod_pedido, cod_produto)
+VALUES (3, 25, 3, 3);
+
+INSERT INTO itens_pedido (cod_itens_pedido, qtd_produto, cod_pedido, cod_produto)
+VALUES (4, 64, 4, 4);
+
+----UPDATE
+UPDATE fornecedor SET nome = 'marcia' WHERE cod_fornecedor = 1;
+UPDATE fornecedor SET nome = 'fran' WHERE cod_fornecedor = 2;
+UPDATE fornecedor SET nome = 'yasmin' WHERE cod_fornecedor = 3;
+UPDATE fornecedor SET nome = 'monica' WHERE cod_fornecedor = 4;
+
+UPDATE cliente SET nome = 'marcos' WHERE cod_cliente = 1;
+UPDATE cliente SET nome = 'TULIO' WHERE cod_cliente = 2;
+UPDATE cliente SET nome = 'DILMA' WHERE cod_cliente = 3;
+UPDATE cliente SET nome = 'LORENA' WHERE cod_cliente = 4;
+
+UPDATE vendedor SET nome = 'JULIA' WHERE cod_vendedor = 1;
+UPDATE vendedor SET nome = 'MARIA' WHERE cod_vendedor = 2;
+UPDATE vendedor SET nome = 'BEATRIZ' WHERE cod_vendedor = 3;
+UPDATE vendedor SET nome = 'CLARA' WHERE cod_vendedor = 4;
+
+UPDATE loja SET nome = 'BUBH' WHERE cod_loja = 1;
+UPDATE loja SET nome = 'RJBH' WHERE cod_loja = 2;
+UPDATE loja SET nome = 'MGBH' WHERE cod_loja = 3;
+UPDATE loja SET nome = 'SPBH' WHERE cod_loja = 4;
+
+UPDATE relatorio SET vlr_total = 133.45 WHERE cod_relatorio = 1;
+UPDATE relatorio SET vlr_total = 253.45 WHERE cod_relatorio = 2;
+UPDATE relatorio SET vlr_total = 2899.00 WHERE cod_relatorio = 3;
+UPDATE relatorio SET vlr_total = 2589.00 WHERE cod_relatorio = 4;
+
+UPDATE estoque SET qtd_produto = 96 WHERE cod_estoque = 1;
+UPDATE estoque SET qtd_produto = 85 WHERE cod_estoque = 2;
+UPDATE estoque SET qtd_produto = 96 WHERE cod_estoque = 3;
+UPDATE estoque SET qtd_produto = 76 WHERE cod_estoque = 4;
+
+UPDATE produto SET nome = 'whisky' WHERE cod_produto = 1;
+UPDATE produto SET nome = 'vodka' WHERE cod_produto = 2;
+UPDATE produto SET nome = 'gin' WHERE cod_produto = 3;
+UPDATE produto SET nome = 'licor' WHERE cod_produto = 4;
+
+UPDATE pedido SET status = 'preparando' WHERE cod_pedido = 1;
+UPDATE pedido SET status = 'entregue' WHERE cod_pedido = 2;
+UPDATE pedido SET status = 'entregue' WHERE cod_pedido = 3;
+UPDATE pedido SET status = 'cancelado' WHERE cod_pedido = 4;
+
+UPDATE itens_pedido SET qtd_produto = 45 WHERE cod_itens_pedido = 1;
+UPDATE itens_pedido SET qtd_produto = 78 WHERE cod_itens_pedido = 2;
+UPDATE itens_pedido SET qtd_produto = 25 WHERE cod_itens_pedido = 3;
+UPDATE itens_pedido SET qtd_produto = 64 WHERE cod_itens_pedido = 4;
+
+UPDATE usuario SET login = 'usu12' WHERE cod_usuario = 1;
+UPDATE usuario SET login = 'usu13' WHERE cod_usuario = 2;
+UPDATE usuario SET login = 'usu13' WHERE cod_usuario = 3;
+UPDATE usuario SET login = 'usu14' WHERE cod_usuario = 4;
+
+----SELECT
+SELECT * FROM cliente;
+SELECT cpf FROM cliente;
+SELECT cpf OR nome FROM cliente;
+SELECT * FROM cliente DESC;
+SELECT cpf FROM cliente LIMIT 3;
+SELECT * FROM cliente ORDER BY nome;
+
+
+SELECT * FROM estoque;
+SELECT qtd_produto FROM estoque;
+SELECT cod_produto FROM estoque;
+SELECT * FROM estoque LIMIT 3;
+SELECT * FROM estoque ORDER BY qtd_produto;
+SELECT * FROM estoque ORDER BY qtd_produto DESC;
+SELECT * FROM estoque WHERE qtd_produto >= 85;
+SELECT qtd_produto FROM estoque WHERE qtd_produto >= 85;
+SELECT SUM(qtd_produto) FROM estoque;
+SELECT AVG(qtd_produto) FROM estoque;
+SELECT MIN(qtd_produto) FROM estoque;
+SELECT SUM(qtd_produto) FROM estoque GROUP BY cod_produto;
+
+SELECT * FROM fornecedor;
+SELECT email FROM fornecedor;
+SELECT nome FROM fornecedor;
+SELECT * FROM fornecedor LIMIT 3;
+SELECT * FROM fornecedor ORDER BY nome;
+SELECT * FROM  fornecedor ORDER BY telefone DESC;
+SELECT cnpj FROM fornecedor WHERE cnpj <= 9874665000189;
+
+SELECT * FROM itens_pedido;
+SELECT qtd_produto FROM itens_pedido;
+SELECT qtd_produto FROM itens_pedido ORDER BY qtd_produto ASC;
+SELECT * FROM itens_pedido LIMIT 2;
+SELECT * FROM itens_pedido ASC;
+SELECT * FROM itens_pedido ORDER BY cod_produto DESC;
+SELECT * FROM itens_pedido WHERE qtd_produto >= 45;
+SELECT SUM(qtd_produto) FROM itens_pedido;
+SELECT MIN(qtd_produto) FROM itens_pedido; 
+
+
+SELECT * FROM loja;
+SELECT endereco FROM loja;
+SELECT telefone, endereco FROM loja;
+SELECT * FROM loja LIMIT 3;
+SELECT nome, telefone FROM loja ASC;
+SELECT telefone FROM loja ORDER BY telefone DESC;
+SELECT * FROM loja WHERE nome = 'RJBH';
+
+
+SELECT * FROM pedido;
+SELECT status, cod_vendedor FROM pedido;
+SELECT * FROM pedido DESC;
+SELECT * FROM pedido ORDER BY tempo_espera DESC;
+SELECT * FROM pedido WHERE status = 'entregue';
+SELECT SUM(valor_pedido) FROM pedido;
+SELECT AVG(valor_pedido) FROM pedido;
+SELECT SUM(valor_pedido) FROM pedido GROUP BY cod_cliente;
+
+
+SELECT * FROM produto;
+SELECT nome, vlr_produto FROM produto;
+SELECT * FROM produto ORDER BY vlr_produto DESC;
+SELECT * FROM produto LIMIT 2;
+SELECT vlr_produto FROM produto ASC;
+SELECT cod_fornecedor, nome, vlr_produto FROM produto LIMIT 3;
+SELECT * FROM produto WHERE vlr_produto >= 129.9;
+SELECT SUM(vlr_produto) FROM produto; 
+SELECT AVG(vlr_produto) FROM produto;
+SELECT COUNT(*) FROM produto GROUP BY nome;
+
+SELECT * FROM relatorio;
+SELECT vlr_total FROM relatorio;
+SELECT * FROM relatorio LIMIT 2;
+SELECT data_inicio, data_fim FROM relatorio;
+SELECT * FROM relatorio ORDER BY vlr_total DESC;
+SELECT vlr_total FROM relatorio DESC;
+SELECT vlr_total FROM relatorio WHERE vlr_total >= 253.45;
+SELECT SUM(vlr_total) FROM relatorio;
+SELECT AVG(vlr_total) FROM relatorio;
+
+
+SELECT * FROM usuario;
+SELECT login, senha FROM usuario;
+SELECT email FROM usuario LIMIT 3;
+SELECT * FROM usuario ORDER BY senha;
+SELECT email FROM usuario WHERE email = 'usu13@hotmail';
+
+SELECT * FROM vendedor;
+SELECT * FROM vendedor limit 3;
+SELECT cpf, telefone, nome FROM vendedor;
+SELECT * from vendedor ORDER BY cpf;
+SELECT cpf FROM vendedor ORDER BY cpf DESC;
+SELECT nome FROM vendedor WHERE nome = 'CLARA';
+
+-----DELETE
+SELECT * FROM cliente;
+DELETE FROM cliente WHERE nome = 1;
+
+SELECT * FROM estoque;
+DELETE FROM estoque WHERE cod_estoque = 4;
+
+SELECT * FROM fornecedor;
+DELETE FROM fornecedor WHERE nome = 3;
+
+SELECT * FROM itens_pedido;
+DELETE FROM itens_pedido WHERE cod_itens_pedido = 3;
+
+SELECT * FROM loja;
+DELETE FROM loja WHERE endereco = 3;
+
+SELECT * FROM pedido;
+DELETE FROM pedido WHERE cod_loja = 2;
+
+SELECT * FROM produto;
+DELETE FROM produto WHERE nome = 2;
+
+SELECT * FROM relatorio;
+DELETE FROM relatorio WHERE vlr_total = 4;
+
+SELECT * FROM usuario;
+DELETE FROM usuario WHERE login = 3;
+
+SELECT * FROM vendedor;
+DELETE FROM vendedor WHERE cpf = 3;
+
+---------INNER JOIN
+SELECT vendedor.*, loja.nome
+FROM vendedor
+INNER JOIN loja ON vendedor.cod_loja = loja.cod_loja;
+
+
+SELECT cliente.*, usuario.cod_usuario, login, email
+FROM cliente 
+INNER JOIN usuario ON cliente.cod_usuario = usuario.cod_usuario;
+
+
+SELECT fornecedor.*, produto.nome, produto.vlr_produto
+FROM fornecedor
+INNER JOIN produto ON fornecedor.cod_fornecedor = produto.cod_fornecedor;
+
+
+SELECT estoque.qtd_produto , produto.nome, produto.vlr_produto 
+FROM estoque
+INNER JOIN produto ON produto.cod_produto = estoque.cod_produto;
+
+
+SELECT pedido.status, pedido.tempo_espera, pedido.valor_pedido, 
+cliente.nome, cliente.cpf, cliente.endereco, cliente.telefone
+FROM cliente
+INNER JOIN pedido ON cliente.cod_cliente = pedido.cod_cliente;
+
+
+SELECT usuario.login, usuario.senha, usuario.email,
+vendedor.nome, vendedor.cpf, vendedor.telefone
+FROM vendedor 
+INNER JOIN usuario ON usuario.cod_usuario = vendedor.cod_usuario;
+
+
+SELECT loja.nome, loja.telefone, loja.endereco,
+relatorio.vlr_total, relatorio.data_inicio, relatorio.data_fim 
+FROM loja 
+INNER JOIN relatorio ON loja.cod_loja = relatorio.cod_loja;
