@@ -1,5 +1,3 @@
-COMPLETO
-
 ---CREATE TABLE
 CREATE TABLE fornecedor (
     cod_fornecedor VARCHAR(255) NOT NULL,
